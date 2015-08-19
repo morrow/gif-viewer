@@ -19,13 +19,14 @@ class GifViewer {
     this.listen();
   }
 
+  // initialize class variables, load gif if location.hash contains url
   initialize() {
     this.frames = [];
     this.images = [];
     this.frame_index = 0;
     this.playback_rate = 1;
     // load if url is specified in anchor
-    if(window.location.hash.length > 1 && this.dom.url.value.length < 1){
+    if(window.location.hash.length > 1){
       if(window.location.hash.match(/http/i)){
         this.dom.url.value = `http${window.location.hash.split('http')[1]}`;
         this.loadGif();
@@ -35,10 +36,9 @@ class GifViewer {
 
   // listen for events
   listen () {
-    //keyboard inputs
+    //respond to keyboard controls
     document.body.onkeypress = (e)=> {
-      console.log(e.keyCode);
-      if(e.keyCode.toString().match(/32|106|107/)){
+      if(e.keyCode.toString().match(/32/)){
         e.preventDefault();
       }
       switch(e.keyCode){
@@ -52,9 +52,10 @@ class GifViewer {
     // load gif on url change
     this.dom.load_gif.onsubmit = (e)=> {
       e.preventDefault();
-      this.loadGif();
+      window.location.hash = `/${this.dom.url.value}`
+      this.initialize();
     }
-    // play/pause toggle clicked
+    // play/pause when play_pause button clicked
     this.dom.play_pause.onclick = () => {
       this.playPause();
     }
@@ -64,7 +65,7 @@ class GifViewer {
       let data_url = this.dom.canvas.toDataURL('image/png');
       window.open(data_url);
     }
-    // update this.dom.canvas on progress input change
+    // update canvas on progress input change
     this.dom.progress.oninput = () => {
       this.pause();
       this.drawFrame(this.dom.progress.value);
@@ -77,23 +78,23 @@ class GifViewer {
         this.play();
       }
     }
-    // move cursor when hovering over this.dom.canvas
+    // move cursor when hovering over canvas if enabled
     this.dom.canvas.onmousemove = (e) => {
       this.x = e.clientX - this.dom.canvas.offsetLeft;
       this.y = e.clientY - this.dom.canvas.offsetTop;
       this.drawFrame();
     }
-    // play/pause on this.dom.canvas click
+    // play/pause on canvas click
     this.dom.canvas.onclick = () => {
       if(this.status != 'loading'){
         this.playPause();
       }
     }
-    // draw cursor when this.dom.canvas is hovered
+    // draw cursor when canvas is hovered
     this.dom.canvas.onmouseenter = () => {
       this.draw_cursor = true;
     }
-    // remove cursor when this.dom.canvas is not hovered
+    // remove cursor when canvas is not hovered
     this.dom.canvas.onmouseout = () => {
       this.draw_cursor = false;
       this.drawFrame();
@@ -101,11 +102,14 @@ class GifViewer {
   }
 
   // load gif
-  loadGif(){
-    let src = this.dom.url.value;
+  loadGif(src = this.dom.url.value){
+    // remove anchor tags from src
+    src = src.replace('#', '');
+    // handle imgur links
     if(src.match(/imgur/i)){
       src = src.replace(/gif$|gifv$/, 'webm')
     }
+    // handle gfycat links
     if(src.match(/gfycat/i)){
       if(!src.match(/zippy/i)){
         src = src.replace(/gfycat/i, 'zippy.gfycat')
@@ -114,39 +118,34 @@ class GifViewer {
       }
       src = `http://crossorigin.me/${src}`
     }
-    src = src.replace('#', '');
     this.changeStatus('loading');
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
     this.dom.overlay.style.display = 'block';
+    // asynchronously load video (experimental feature, trying to load entire video before playing)
     let xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
     xhr.crossOrigin = 'Anonymous'
     xhr.open('GET', src, true);
     xhr.onload = (e) => {
-      console.log(e);
       if (xhr.status == 200) {
         this.dom.video.src = URL.createObjectURL(xhr.response);
         for(var element in this.dom){
           this.dom[element].setAttribute('disabled', 'disabled');
         }
         this.generateFrames();
-      } else {
-        console.log(xhr.status);
       }
-    }
-    xhr.onerror = function(e){
-      console.log(e);
     }
     xhr.send();
   }
 
+  // change status
   changeStatus (status) {
     this.status = status;
     document.body.className = status;
   }
 
-  // play or pause depending on status
+  // play or pause
   playPause () {
     if(this.status == 'playing'){
       this.pause();
@@ -160,13 +159,14 @@ class GifViewer {
   pause () {
     this.changeStatus('paused');
     window.clearInterval(window.play_interval);
-    this.dom.play_pause.innerHTML = 'play';
+    this.dom.play_pause.innerHTML = '▶';
   }
 
   // play gif
   play () {
     this.changeStatus('playing');
-    this.dom.play_pause.innerHTML = 'pause';
+    this.dom.play_pause.innerHTML = '▌▌';
+    // if gif is at end position and play() is triggered, start at beginning
     if(this.dom.progress.value == this.dom.progress.max){
       this.dom.progress.value = 0;
     }

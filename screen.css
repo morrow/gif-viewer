@@ -9,9 +9,10 @@ header {
 }
 
 header #url {
-  width:500px;
-  padding:0.5em;
+  width:400px;
+  padding:0.75em 0.5em;
   text-align:center;
+  background:#eee;
 }
 
 main {
@@ -38,6 +39,10 @@ canvas {
   border:3px solid black;
 }
 
+button, label, input[type=range], input[type=submit]{
+  cursor:pointer;
+}
+
 #controls {
   margin-top:1em;
   text-align:center;
@@ -46,6 +51,13 @@ canvas {
 #controls .control {
   display:inline-block;
   margin:0.5em;
+}
+
+#play_pause {
+  font-weight:bold;
+  padding:0.5em;
+  width:50px;
+  background:#ddd;
 }
 
 #playback_rate {
