@@ -17,6 +17,14 @@ class GifViewer {
     this.ctx = this.dom.canvas.getContext('2d');
     this.initialize();
     this.listen();
+    // load if url is specified in anchor
+    if(window.location.hash.length > 1){
+      let url = window.location.hash.slice(1);
+      if(url.match(/http/i)){
+        this.dom.url.value = window.location.hash.slice(1);
+        this.loadGif();
+      }
+    }
   }
 
   initialize() {
@@ -45,20 +53,7 @@ class GifViewer {
     // load gif on url change
     this.dom.load_gif.onsubmit = (e)=> {
       e.preventDefault();
-      let src = this.dom.url.value;
-      if(src.match(/imgur/i)){
-        src = src.replace(/gif$|gifv$/, 'webm')
-      }
-      if(src.match(/gfycat/i)){
-        if(!src.match(/zippy/i)){
-          src = src.replace(/gfycat/i, 'zippy.gfycat')
-          src = src.replace(/\.webm$/i, '')
-          src += '.webm'
-        }
-        src = `http://crossorigin.me/${src}`
-      }
-      src = src.replace('#', '')
-      this.loadGif(src);
+      this.loadGif();
     }
     // play/pause toggle clicked
     this.dom.play_pause.onclick = () => {
@@ -107,7 +102,20 @@ class GifViewer {
   }
 
   // load gif
-  loadGif(src){
+  loadGif(){
+    let src = this.dom.url.value;
+    if(src.match(/imgur/i)){
+      src = src.replace(/gif$|gifv$/, 'webm')
+    }
+    if(src.match(/gfycat/i)){
+      if(!src.match(/zippy/i)){
+        src = src.replace(/gfycat/i, 'zippy.gfycat')
+        src = src.replace(/\.webm$/i, '')
+        src += '.webm'
+      }
+      src = `http://crossorigin.me/${src}`
+    }
+    src = src.replace('#', '');
     this.changeStatus('loading');
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';

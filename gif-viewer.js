@@ -24,6 +24,14 @@ var GifViewer = (function () {
     this.ctx = this.dom.canvas.getContext('2d');
     this.initialize();
     this.listen();
+    // load if url is specified in anchor
+    if (window.location.hash.length > 1) {
+      var url = window.location.hash.slice(1);
+      if (url.match(/http/i)) {
+        this.dom.url.value = window.location.hash.slice(1);
+        this.loadGif();
+      }
+    }
   }
 
   _createClass(GifViewer, [{
@@ -62,20 +70,7 @@ var GifViewer = (function () {
       // load gif on url change
       this.dom.load_gif.onsubmit = function (e) {
         e.preventDefault();
-        var src = _this.dom.url.value;
-        if (src.match(/imgur/i)) {
-          src = src.replace(/gif$|gifv$/, 'webm');
-        }
-        if (src.match(/gfycat/i)) {
-          if (!src.match(/zippy/i)) {
-            src = src.replace(/gfycat/i, 'zippy.gfycat');
-            src = src.replace(/\.webm$/i, '');
-            src += '.webm';
-          }
-          src = 'http://crossorigin.me/' + src;
-        }
-        src = src.replace('#', '');
-        _this.loadGif(src);
+        _this.loadGif();
       };
       // play/pause toggle clicked
       this.dom.play_pause.onclick = function () {
@@ -126,9 +121,22 @@ var GifViewer = (function () {
     // load gif
   }, {
     key: 'loadGif',
-    value: function loadGif(src) {
+    value: function loadGif() {
       var _this2 = this;
 
+      var src = this.dom.url.value;
+      if (src.match(/imgur/i)) {
+        src = src.replace(/gif$|gifv$/, 'webm');
+      }
+      if (src.match(/gfycat/i)) {
+        if (!src.match(/zippy/i)) {
+          src = src.replace(/gfycat/i, 'zippy.gfycat');
+          src = src.replace(/\.webm$/i, '');
+          src += '.webm';
+        }
+        src = 'http://crossorigin.me/' + src;
+      }
+      src = src.replace('#', '');
       this.changeStatus('loading');
       this.dom.video.style.display = 'block';
       this.dom.canvas.style.display = 'none';
