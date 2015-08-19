@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Gif Viewer</title>
+    <meta charset='utf-8' />
+    <link rel='stylesheet' href='screen.css' />
+  </head>
+  <body>
+    <header>
+      <h1>Gif Viewer</h1>
+      <form id='load_gif' action='#'>
+        <input id='url' type='url' placeholder='Insert GIF source url here' />
+        <input type='submit' value='load gif' />
+      </form>
+    </header>
+    <main>
+      <video id='video' crossOrigin="Anonymous" autoplay></video>
+      <canvas id='canvas'></canvas>
+      <div id='controls'>
+        <div class='control'>
+          <button id='play_pause'>pause</button>
+        </div>
+        <div class='control'>
+          <label for='playback_rate'>Playback Rate:</label>
+          <input id='playback_rate' type="number" step="0.25" min="0.25" max="20" value="1">
+        </div>
+        <div class='control'>
+          <label for='draw_cursor'>Draw Cursor:</label>
+          <input id='draw_cursor' type='checkbox' />
+        </div>
+        <div class='control'>
+          <label for='loop'>Loop:</label>
+          <input id='loop' type='checkbox' checked />
+        </div>
+        <div class='control'>
+          <button id='save'>Grab Current Frame</button>
+        </div>
+
+        <div class='control'>
+          <input id='progress' type="range" min="0" value="0" step="1">
+        </div>
+      </div>
+    </main>
+    <footer>
+        <div>Keyboard controls: </div>
+        <div> J: next frame</div>
+        <div> K: previous frame</div>
+        <div> Space: play / pause </div>
+        <div> C: toggle cursor </div>
+    </footer>
+    <div id='overlay'>Extracting frames from GIF, please wait...</div>
+  </body>
+  <script type='text/javascript' src='gif-viewer.js'></script>
+  <script type='text/javascript'>window.gif_viewer = new GifViewer();</script>
+</html>
