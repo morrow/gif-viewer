@@ -17,15 +17,6 @@ class GifViewer {
     this.ctx = this.dom.canvas.getContext('2d');
     this.initialize();
     this.listen();
-    // load if url is specified in anchor
-    if(window.location.hash.length > 1){
-      let url = window.location.hash.slice(1);
-      if(url.match(/http/i)){
-        this.dom.url.value = `http${window.location.hash.split('http')[1]}`;
-        window.
-        this.loadGif();
-      }
-    }
   }
 
   initialize() {
@@ -33,6 +24,13 @@ class GifViewer {
     this.images = [];
     this.frame_index = 0;
     this.playback_rate = 1;
+    // load if url is specified in anchor
+    if(window.location.hash.length > 1 && this.dom.url.value.length < 1){
+      if(window.location.hash.match(/http/i)){
+        this.dom.url.value = `http${window.location.hash.split('http')[1]}`;
+        this.loadGif();
+      }
+    }
   }
 
   // listen for events
