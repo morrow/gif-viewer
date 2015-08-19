@@ -21,7 +21,8 @@ class GifViewer {
     if(window.location.hash.length > 1){
       let url = window.location.hash.slice(1);
       if(url.match(/http/i)){
-        this.dom.url.value = window.location.hash.slice(1);
+        this.dom.url.value = `http${window.location.hash.split('http')[1]}`;
+        window.
         this.loadGif();
       }
     }
