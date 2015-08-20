@@ -37,10 +37,8 @@ var GifViewer = (function () {
       this.playback_rate = 1;
       // load if url is specified in anchor
       if (window.location.hash.length > 1) {
-        if (window.location.hash.match(/http/i)) {
-          this.dom.url.value = 'http' + window.location.hash.split('http')[1];
-          this.loadGif();
-        }
+        this.dom.url.value = window.location.hash.split('#/')[1];
+        this.loadGif();
       }
     }
 
@@ -127,6 +125,9 @@ var GifViewer = (function () {
 
       var src = arguments.length <= 0 || arguments[0] === undefined ? this.dom.url.value : arguments[0];
 
+      if (!src.match(/http/)) {
+        src = 'http://' + src;
+      }
       // remove hash from src
       src = src.replace('#', '');
       // handle imgur links
