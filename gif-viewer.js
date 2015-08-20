@@ -98,8 +98,8 @@ var GifViewer = (function () {
       };
       // move cursor when hovering over canvas if enabled
       this.dom.canvas.onmousemove = function (e) {
-        _this.x = e.clientX - _this.dom.canvas.offsetLeft;
-        _this.y = e.clientY - _this.dom.canvas.offsetTop;
+        _this.x = e.clientX - _this.dom.canvas.offsetLeft + window.scrollX;
+        _this.y = e.clientY - _this.dom.canvas.offsetTop + window.scrollY;
         _this.drawFrame();
       };
       // play/pause on canvas click
@@ -127,7 +127,7 @@ var GifViewer = (function () {
 
       var src = arguments.length <= 0 || arguments[0] === undefined ? this.dom.url.value : arguments[0];
 
-      // remove anchor tags from src
+      // remove hash from src
       src = src.replace('#', '');
       // handle imgur links
       if (src.match(/imgur/i)) {
@@ -142,23 +142,35 @@ var GifViewer = (function () {
         }
         src = 'http://crossorigin.me/' + src;
       }
-      this.changeStatus('loading');
-      this.dom.video.style.display = 'block';
-      this.dom.canvas.style.display = 'none';
-      this.dom.overlay.style.display = 'block';
       // asynchronously load video (experimental feature, trying to load entire video before playing)
+      this.changeStatus('loading');
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
       xhr.crossOrigin = 'Anonymous';
       xhr.open('GET', src, true);
       xhr.onload = function (e) {
         if (xhr.status == 200) {
-          _this2.dom.video.src = URL.createObjectURL(xhr.response);
-          for (var element in _this2.dom) {
-            _this2.dom[element].setAttribute('disabled', 'disabled');
+          if (xhr.getResponseHeader('content-type').match('video')) {
+            _this2.dom.video.src = URL.createObjectURL(xhr.response);
+            for (var element in _this2.dom) {
+              _this2.dom[element].setAttribute('disabled', 'disabled');
+            }
+            _this2.generateFrames();
+          } else {
+            _this2.dom.overlay.innerHTML = 'Error loading GIF';
+            window.setTimeout(function () {
+              _this2.changeStatus('ready');
+              _this2.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
+            }, 2000);
           }
-          _this2.generateFrames();
         }
+      };
+      xhr.onerror = function (e) {
+        _this2.dom.overlay.innerHTML = 'Error loading GIF.';
+        window.setTimeout(function () {
+          _this2.changeStatus('ready');
+          _this2.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
+        }, 2000);
       };
       xhr.send();
     }
@@ -177,7 +189,7 @@ var GifViewer = (function () {
     value: function playPause() {
       if (this.status == 'playing') {
         this.pause();
-      } else if (this.status == 'paused') {
+      } else if (this.status.match(/paused|ready/)) {
         this.play();
       }
     }
@@ -301,12 +313,14 @@ var GifViewer = (function () {
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
       this.dom.video.playbackRate = 2;
+      this.dom.video.style.display = 'block';
+      this.dom.canvas.style.display = 'none';
       this.dom.video.oncanplaythrough = function () {
         _this5.dom.canvas.width = _this5.dom.video.offsetWidth;
         _this5.dom.canvas.height = _this5.dom.video.offsetHeight;
-        _this5.dom.progress.style.width = _this5.dom.canvas.width + 'px';
-        _this5.dom.canvas.style.display = 'block';
         _this5.dom.video.style.display = 'none';
+        _this5.dom.canvas.style.display = 'block';
+        _this5.dom.progress.style.width = _this5.dom.canvas.width + 'px';
         window.frame_interval = window.setInterval(function () {
           return _this5.generateFrame();
         }, 30);
@@ -328,7 +342,6 @@ var GifViewer = (function () {
       for (var element in this.dom) {
         this.dom[element].removeAttribute('disabled');
       }
-      this.dom.overlay.style.display = 'none';
       this.pause();
       this.drawFrame(0);
       this.play();

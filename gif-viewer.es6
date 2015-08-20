@@ -80,8 +80,8 @@ class GifViewer {
     }
     // move cursor when hovering over canvas if enabled
     this.dom.canvas.onmousemove = (e) => {
-      this.x = e.clientX - this.dom.canvas.offsetLeft;
-      this.y = e.clientY - this.dom.canvas.offsetTop;
+      this.x = e.clientX - this.dom.canvas.offsetLeft + window.scrollX;
+      this.y = e.clientY - this.dom.canvas.offsetTop + window.scrollY;
       this.drawFrame();
     }
     // play/pause on canvas click
@@ -103,7 +103,7 @@ class GifViewer {
 
   // load gif
   loadGif(src = this.dom.url.value){
-    // remove anchor tags from src
+    // remove hash from src
     src = src.replace('#', '');
     // handle imgur links
     if(src.match(/imgur/i)){
@@ -118,23 +118,36 @@ class GifViewer {
       }
       src = `http://crossorigin.me/${src}`
     }
-    this.changeStatus('loading');
-    this.dom.video.style.display = 'block';
-    this.dom.canvas.style.display = 'none';
-    this.dom.overlay.style.display = 'block';
     // asynchronously load video (experimental feature, trying to load entire video before playing)
+    this.changeStatus('loading');
     let xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
     xhr.crossOrigin = 'Anonymous'
     xhr.open('GET', src, true);
     xhr.onload = (e) => {
       if (xhr.status == 200) {
-        this.dom.video.src = URL.createObjectURL(xhr.response);
-        for(var element in this.dom){
-          this.dom[element].setAttribute('disabled', 'disabled');
+        if(xhr.getResponseHeader('content-type').match('video')){
+          this.dom.video.src = URL.createObjectURL(xhr.response);
+          for(var element in this.dom){
+            this.dom[element].setAttribute('disabled', 'disabled');
+          }
+          this.generateFrames();
         }
-        this.generateFrames();
+        else {
+          this.dom.overlay.innerHTML = 'Error loading GIF';
+          window.setTimeout( ()=> {
+            this.changeStatus('ready');
+            this.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
+          }, 2000);
+        }
       }
+    }
+    xhr.onerror = (e)=> {
+      this.dom.overlay.innerHTML = `Error loading GIF.`;
+      window.setTimeout( ()=> {
+        this.changeStatus('ready');
+        this.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
+      }, 2000);
     }
     xhr.send();
   }
@@ -150,7 +163,7 @@ class GifViewer {
     if(this.status == 'playing'){
       this.pause();
     }
-    else if(this.status == 'paused'){
+    else if(this.status.match(/paused|ready/)){
       this.play();
     }
   }
@@ -250,12 +263,14 @@ class GifViewer {
     this.dom.video.pause();
     this.dom.video.currentTime = 0;
     this.dom.video.playbackRate = 2;
+    this.dom.video.style.display = 'block';
+    this.dom.canvas.style.display = 'none';
     this.dom.video.oncanplaythrough = () => {
       this.dom.canvas.width = this.dom.video.offsetWidth;
       this.dom.canvas.height = this.dom.video.offsetHeight;
-      this.dom.progress.style.width = `${this.dom.canvas.width}px`;
-      this.dom.canvas.style.display = 'block';
       this.dom.video.style.display = 'none';
+      this.dom.canvas.style.display = 'block';
+      this.dom.progress.style.width = `${this.dom.canvas.width}px`;
       window.frame_interval = window.setInterval( ()=> this.generateFrame(), 30);
       this.dom.video.play();
       this.dom.video.oncanplaythrough = null;
@@ -273,7 +288,6 @@ class GifViewer {
     for(let element in this.dom){
       this.dom[element].removeAttribute('disabled');
     }
-    this.dom.overlay.style.display = 'none';
     this.pause();
     this.drawFrame(0);
     this.play();

@@ -25,6 +25,7 @@ body.loading main, body.loading header, body.loading footer {
 }
 
 video, canvas {
+  margin:0 auto;
   width:100%;
 }
 
@@ -91,4 +92,8 @@ footer > div {
   text-align:center;
   padding-top:10em;
   display:none;
+}
+
+body.loading #overlay{
+  display:block;
 }
