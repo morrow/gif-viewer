@@ -162,6 +162,7 @@ var GifViewer = (function () {
         }
         src = 'http://crossorigin.me/' + src;
       }
+      this.video_src = src;
       if (!window.localStorage['alert_given']) {
         alert('Please stay on this page while the extraction process runs. Results will vary if ran in a background tab. This warning will only appear once. Thanks. :)');
         window.localStorage['alert_given'] = true;
@@ -171,6 +172,7 @@ var GifViewer = (function () {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
       xhr.crossOrigin = 'Anonymous';
+      xhr.contentType = 'video/webm';
       xhr.open('GET', src, true);
       xhr.onload = function (e) {
         if (xhr.status == 200) {
@@ -181,11 +183,10 @@ var GifViewer = (function () {
             }
             _this2.generateFrames();
           } else {
-            _this2.dom.overlay.innerHTML = 'Error loading GIF';
-            window.setTimeout(function () {
-              _this2.changeStatus('ready');
-              _this2.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
-            }, 2000);
+            _this2.dom.video.src = _this2.video_src;
+            _this2.dom.video.oncanplaythrough = function () {
+              return _this2.generateFrames();
+            };
           }
         }
       };

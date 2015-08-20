@@ -132,6 +132,7 @@ class GifViewer {
       }
       src = `http://crossorigin.me/${src}`
     }
+    this.video_src = src;
     if(!window.localStorage['alert_given']){
       alert('Please stay on this page while the extraction process runs. Results will vary if ran in a background tab. This warning will only appear once. Thanks. :)');
       window.localStorage['alert_given'] = true;
@@ -141,6 +142,7 @@ class GifViewer {
     let xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
     xhr.crossOrigin = 'Anonymous'
+    xhr.contentType = 'video/webm';
     xhr.open('GET', src, true);
     xhr.onload = (e) => {
       if (xhr.status == 200) {
@@ -152,11 +154,8 @@ class GifViewer {
           this.generateFrames();
         }
         else {
-          this.dom.overlay.innerHTML = 'Error loading GIF';
-          window.setTimeout( ()=> {
-            this.changeStatus('ready');
-            this.dom.overlay.innerHTML = 'Extracting frames from GIF, please wait...';
-          }, 2000);
+          this.dom.video.src = this.video_src;
+          this.dom.video.oncanplaythrough = ()=> this.generateFrames();
         }
       }
     }
