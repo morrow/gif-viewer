@@ -50,7 +50,7 @@ var GifViewer = (function () {
 
       //respond to keyboard controls
       document.body.onkeypress = function (e) {
-        if (e.keyCode.toString().match(/32/)) {
+        if (e.keyCode.toString().match(/32|99/)) {
           e.preventDefault();
         }
         switch (e.keyCode) {
