@@ -127,7 +127,6 @@ var GifViewer = (function () {
 
       var src = arguments.length <= 0 || arguments[0] === undefined ? this.dom.url.value : arguments[0];
 
-      alert('please stay on this page focused until extraction is complete. Results will vary if ran in a background tab. Thanks :)');
       // remove hash from src
       src = src.replace('#', '');
       // handle imgur links
@@ -161,6 +160,10 @@ var GifViewer = (function () {
           if (typeof _ret === 'object') return _ret.v;
         }
         src = 'http://crossorigin.me/' + src;
+      }
+      if (!window.localStorage['alert_given']) {
+        alert('Please stay on this page while the extraction process runs. Results will vary if ran in a background tab. This warning will only appear once. Thanks. :)');
+        window.localStorage['alert_given'] = true;
       }
       // asynchronously load video (experimental feature, trying to load entire video before playing)
       this.changeStatus('loading');
