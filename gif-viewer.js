@@ -139,7 +139,7 @@ var GifViewer = (function () {
       }
       // handle gfycat links
       if (src.match(/gfycat/i)) {
-        if (!src.match('.gfycat')) {
+        if (!src.match(/\.gfycat/)) {
           var _ret = (function () {
             var api_link = 'http://gfycat.com/cajax/get/' + src.split('gfycat.com/')[1].split('.')[0];
             var xhr = new XMLHttpRequest();

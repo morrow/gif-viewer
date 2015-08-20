@@ -115,7 +115,7 @@ class GifViewer {
     }
     // handle gfycat links
     if(src.match(/gfycat/i)){
-      if(!src.match('.gfycat')){
+      if(!src.match(/\.gfycat/)){
         let api_link = `http://gfycat.com/cajax/get/${src.split('gfycat.com/')[1].split('.')[0]}`
         let xhr = new XMLHttpRequest();
         xhr.crossOrigin = 'Anonymous';
