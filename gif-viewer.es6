@@ -107,14 +107,27 @@ class GifViewer {
     src = src.replace('#', '');
     // handle imgur links
     if(src.match(/imgur/i)){
-      src = src.replace(/gif$|gifv$/, 'webm')
+      if(!src.match('i.imgur')){
+        src = src.replace('imgur', 'i.imgur');
+      }
+      src = src.replace(/\.gif$|\.gifv$/, '');
+      src += '.webm';
     }
     // handle gfycat links
     if(src.match(/gfycat/i)){
-      if(!src.match(/zippy/i)){
-        src = src.replace(/gfycat/i, 'zippy.gfycat')
-        src = src.replace(/\.webm$/i, '')
-        src += '.webm'
+      if(!src.match('.gfycat')){
+        let api_link = `http://gfycat.com/cajax/get/${src.split('gfycat.com/')[1].split('.')[0]}`
+        let xhr = new XMLHttpRequest();
+        xhr.crossOrigin = 'Anonymous';
+        xhr.open('GET', api_link, true);
+        xhr.onload = (e) => {
+          if(xhr.status == 200) {
+            window.location.hash = '/' + (JSON.parse(xhr.response).gfyItem.webmUrl);
+            this.initialize();
+          }
+        }
+        xhr.send();
+        return false
       }
       src = `http://crossorigin.me/${src}`
     }

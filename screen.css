@@ -18,6 +18,7 @@ header #url {
 main {
   max-width:1000px;
   margin:1em auto;
+  text-align:center;
 }
 
 body.loading main, body.loading header, body.loading footer {
@@ -26,7 +27,7 @@ body.loading main, body.loading header, body.loading footer {
 
 video, canvas {
   margin:0 auto;
-  width:100%;
+  max-width:100%;
 }
 
 video {
@@ -35,7 +36,7 @@ video {
 
 canvas {
   display:none;
-  width:100%;
+  max-height:550px;
   cursor:pointer;
   border:3px solid black;
 }
