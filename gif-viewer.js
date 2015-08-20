@@ -127,6 +127,7 @@ var GifViewer = (function () {
 
       var src = arguments.length <= 0 || arguments[0] === undefined ? this.dom.url.value : arguments[0];
 
+      alert('please stay on this page focused until extraction is complete. Results will vary if ran in a background tab. Thanks :)');
       // remove hash from src
       src = src.replace('#', '');
       // handle imgur links

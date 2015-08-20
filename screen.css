@@ -18,7 +18,7 @@ header #url {
 main {
   max-width:1000px;
   margin:1em auto;
-  text-align:center;
+  /*text-align:center;*/
 }
 
 body.loading main, body.loading header, body.loading footer {
@@ -27,7 +27,7 @@ body.loading main, body.loading header, body.loading footer {
 
 video, canvas {
   margin:0 auto;
-  max-width:100%;
+  width:100%;
 }
 
 video {
@@ -36,7 +36,6 @@ video {
 
 canvas {
   display:none;
-  max-height:550px;
   cursor:pointer;
   border:3px solid black;
 }
@@ -93,6 +92,7 @@ footer > div {
   text-align:center;
   padding-top:10em;
   display:none;
+  text-shadow:0px 0px 6px rgba(255,255,255,0.5), 1px 1px 0px black, -1px -1px 0px black 1px 0px 0px black 0px 1px 0px black;
 }
 
 body.loading #overlay{
