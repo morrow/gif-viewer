@@ -75,7 +75,7 @@ var GifViewer = (function () {
       this.dom.load_gif.onsubmit = function (e) {
         e.preventDefault();
         window.location.hash = '/' + _this.dom.url.value;
-        _this.initialize();
+        window.location.reload();
       };
       // play/pause when play_pause button clicked
       this.dom.play_pause.onclick = function () {
@@ -315,11 +315,6 @@ var GifViewer = (function () {
       var _this4 = this;
 
       var video = this.dom.video;
-      if (video.buffered.end(0) != video.duration && video.buffered.end(0) - video.currentTime < 10) {
-        video.playbackRate = 0.25;
-      } else {
-        video.playbackRate = 2;
-      }
       this.ctx.drawImage(video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
       var data_url = this.dom.canvas.toDataURL('image/png');
       if (this.frames.length < 1 || this.frames.indexOf(data_url) < 0) {
@@ -331,7 +326,7 @@ var GifViewer = (function () {
         this.dom.video.currentTime = 0;
         this.generateImages();
         this.fp_ctx.fillRect(0, 0, 100 * this.dom.fp_canvas.width, 30);
-      } else if (this.dom.video.currentTime / this.dom.video.duration > 0.99) {
+      } else if (this.dom.video.currentTime / this.dom.video.duration >= 0.99) {
         window.clearInterval(window.frame_interval);
         window.setTimeout(function () {
           return _this4.generateFrame(true);
@@ -347,9 +342,10 @@ var GifViewer = (function () {
     value: function generateFrames() {
       var _this5 = this;
 
+      this.dom.video.loop = false;
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
-      this.dom.video.playbackRate = 0.25;
+      this.dom.video.playbackRate = 2;
       this.dom.video.style.display = 'block';
       this.dom.canvas.style.display = 'none';
       this.dom.canvas.width = this.dom.video.offsetWidth;
@@ -361,6 +357,10 @@ var GifViewer = (function () {
         return _this5.generateFrame();
       }, 30);
       this.dom.video.play();
+      this.dom.video.onended = function () {
+        window.clearInterval(window.frame_interval);
+      };
+      this.dom.video.oncanplaythrough = null;
     }
 
     // generate image from frame
