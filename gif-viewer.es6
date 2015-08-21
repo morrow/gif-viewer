@@ -289,7 +289,7 @@ class GifViewer {
   generateFrames () {
     this.dom.video.pause();
     this.dom.video.currentTime = 0;
-    this.dom.video.playbackRate = 2;
+    this.dom.video.playbackRate = 0.25;
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
     this.dom.canvas.width = this.dom.video.offsetWidth;
