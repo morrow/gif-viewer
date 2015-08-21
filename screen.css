@@ -9,35 +9,52 @@ header {
 }
 
 header #url {
-  width:400px;
-  padding:0.75em 0.5em;
-  text-align:center;
-  background:#eee;
+  width: 650px;
+  padding: 1em 0.75em;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #333;
+  font-size: 1.5em;
+  font-family: monospace
 }
 
 main {
   max-width:1000px;
   margin:1em auto;
+  text-align:center;
+}
+
+.uninitialized main, .uninitialized footer {
+  transition:opacity 1s linear;
+  opacity:0;
+}
+
+.loading main, .loading footer {
+  opacity:1;
 }
 
 body.loading main, body.loading header, body.loading footer {
   -webkit-filter:blur(3px);
+  filter:blur(3px);
 }
 
-video, canvas {
+video, #canvas {
   margin:0 auto;
   max-width:100%;
   max-height:700px;
+  transition: all 1s linear;
 }
 
 video {
   background:#eee;
 }
 
-canvas {
+#canvas {
   display:none;
   cursor:pointer;
   border:3px solid black;
+  margin-top:1em;
 }
 
 button, label, input[type=range], input[type=submit]{
@@ -55,10 +72,11 @@ button, label, input[type=range], input[type=submit]{
 }
 
 #play_pause {
-  font-weight:bold;
+  font-weight:normal;
   padding:0.5em;
-  width:50px;
+  width:3em;
   background:#ddd;
+  text-align:center;
 }
 
 #playback_rate {
@@ -81,20 +99,49 @@ footer > div {
 }
 
 #overlay {
+  pointer-events: none;
   position:fixed;
-  top:0;
+  top:0em;
   bottom:0;
   left:0;
   right:0;
-  background:rgba(0,0,0,0.3);
+  background:rgba(0,0,0,0.5);
   color:white;
-  font-size:3em;
+  font-size:2em;
   text-align:center;
-  padding-top:10em;
-  display:none;
-  text-shadow:0px 0px 6px rgba(255,255,255,0.5), 1px 1px 0px black, -1px -1px 0px black 1px 0px 0px black 0px 1px 0px black;
+  padding-top:2em;
+  transition:all 0.5s linear;
+  opacity:0;
 }
 
 body.loading #overlay{
+  opacity:1;
+}
+
+#overlay h1 {
+  background:black;
+  margin:0.25em;
+  padding:0.5em 1em;
+  display:inline-block;
+}
+
+#overlay h2 {
+  margin:0.25em;
+  padding:0.5em 1em;
+  display:inline-block;
+  background:orangered;
+}
+
+#overlay p {
+  padding:0.5em 1em;
+  display:inline-block;
+  background:black;
+}
+
+#frame_progress_canvas, #image_progress_canvas {
+  width:500px;
+  height:30px;
   display:block;
+  margin:1em auto;
+  border:3px solid white;
 }

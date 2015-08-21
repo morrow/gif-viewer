@@ -5,7 +5,7 @@
     <meta charset='utf-8' />
     <link rel='stylesheet' href='screen.css' />
   </head>
-  <body>
+  <body class='uninitialized'>
     <header>
       <h1>Gif Viewer</h1>
       <form id='load_gif' action='#'>
@@ -48,7 +48,18 @@
         <div> Space: play / pause </div>
         <div> C: toggle cursor </div>
     </footer>
-    <div id='overlay'>Extracting frames from GIF, please wait...</div>
+    <div id='overlay'>
+      <h1>Extracting frames from GIF</h1>
+      <br />
+      <h2>Please remain on this page.</h2>
+      <br />
+      <br />
+      <label>Frame Extraction Progress:</label>
+      <canvas id='frame_progress_canvas' width=500 height=30></canvas>
+      <br />
+      <label>Image Generation Progress:</label>
+      <canvas id='image_progress_canvas' width=500 height=30></canvas>
+    </div>
   </body>
   <script type='text/javascript' src='gif-viewer.js'></script>
   <script type='text/javascript'>window.gif_viewer = new GifViewer();</script>
