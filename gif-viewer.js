@@ -55,18 +55,20 @@ var GifViewer = (function () {
       var _this = this;
 
       //respond to keyboard controls
-      document.body.onkeypress = function (e) {
+      document.body.onkeydown = function (e) {
         if (e.keyCode.toString().match(/32/)) {
           e.preventDefault();
         }
         switch (e.keyCode) {
           case 32:
             _this.playPause();break;
-          case 106:
+          case 74:
             _this.nextFrame();break;
-          case 107:
+          case 75:
             _this.prevFrame();break;
-          case 99:
+          case 76:
+            _this.dom.loop.checked = !_this.dom.loop.checked;break;
+          case 67:
             _this.dom.draw_cursor.checked = !_this.dom.draw_cursor.checked;break;
             break;
         }
@@ -335,7 +337,7 @@ var GifViewer = (function () {
       this.dom.video.loop = false;
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
-      this.dom.video.playbackRate = 1;
+      this.dom.video.playbackRate = 2;
       this.dom.video.style.display = 'block';
       this.dom.canvas.style.display = 'none';
       this.dom.canvas.width = this.dom.video.videoWidth;

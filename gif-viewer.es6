@@ -41,15 +41,16 @@ class GifViewer {
   // listen for events
   listen () {
     //respond to keyboard controls
-    document.body.onkeypress = (e)=> {
+    document.body.onkeydown = (e)=> {
       if(e.keyCode.toString().match(/32/)){
         e.preventDefault();
       }
       switch(e.keyCode){
         case 32: this.playPause(); break;
-        case 106: this.nextFrame(); break;
-        case 107: this.prevFrame(); break;
-        case 99: this.dom.draw_cursor.checked = !this.dom.draw_cursor.checked; break;
+        case 74: this.nextFrame(); break;
+        case 75: this.prevFrame(); break;
+        case 76: this.dom.loop.checked = !this.dom.loop.checked; break;
+        case 67: this.dom.draw_cursor.checked = !this.dom.draw_cursor.checked; break;
         break;
       }
     }
@@ -278,7 +279,7 @@ class GifViewer {
     this.dom.video.loop = false;
     this.dom.video.pause();
     this.dom.video.currentTime = 0;
-    this.dom.video.playbackRate = 1;
+    this.dom.video.playbackRate = 2;
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
     this.dom.canvas.width = this.dom.video.videoWidth;
