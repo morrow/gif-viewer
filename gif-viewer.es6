@@ -217,7 +217,7 @@ class GifViewer {
           this.pause();
         }
       }
-    }, (70 / this.playback_rate) );
+    }, (80 / this.playback_rate) );
   }
 
   // next frame
@@ -284,7 +284,7 @@ class GifViewer {
     this.dom.video.style.display = 'none';
     this.dom.canvas.style.display = 'block';
     this.dom.progress.style.width = `${this.dom.canvas.width}px`;
-    window.frame_interval = window.setInterval( ()=> this.generateFrame(), 20);
+    window.frame_interval = window.setInterval( ()=> this.generateFrame(), 10);
     this.dom.video.play();
     this.dom.video.onended = ()=> {
       window.onblur = null;
@@ -293,6 +293,7 @@ class GifViewer {
       this.dom.video.currentTime = 0;
       this.generateImages();
       this.fp_ctx.fillRect(0, 0, 100 * (this.dom.fp_canvas.width), 30);
+      this.dom.video.onended = null;
     };
     this.dom.video.oncanplaythrough = null;
   }

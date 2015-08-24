@@ -259,7 +259,7 @@ var GifViewer = (function () {
             _this3.pause();
           }
         }
-      }, 70 / this.playback_rate);
+      }, 80 / this.playback_rate);
     }
 
     // next frame
@@ -343,7 +343,7 @@ var GifViewer = (function () {
       this.dom.progress.style.width = this.dom.canvas.width + 'px';
       window.frame_interval = window.setInterval(function () {
         return _this4.generateFrame();
-      }, 20);
+      }, 10);
       this.dom.video.play();
       this.dom.video.onended = function () {
         window.onblur = null;
@@ -352,6 +352,7 @@ var GifViewer = (function () {
         _this4.dom.video.currentTime = 0;
         _this4.generateImages();
         _this4.fp_ctx.fillRect(0, 0, 100 * _this4.dom.fp_canvas.width, 30);
+        _this4.dom.video.onended = null;
       };
       this.dom.video.oncanplaythrough = null;
     }
