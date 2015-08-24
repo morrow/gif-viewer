@@ -316,27 +316,12 @@ var GifViewer = (function () {
   }, {
     key: 'generateFrame',
     value: function generateFrame(final_frame) {
-      var _this4 = this;
-
       var video = this.dom.video;
       this.ctx.drawImage(video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
       var data_url = this.dom.canvas.toDataURL('image/png');
       if (this.frames.length < 1 || this.frames.indexOf(data_url) < 0) {
         this.frames.push(data_url);
       }
-      if (final_frame) {
-        window.clearInterval(window.frame_interval);
-        this.dom.video.pause();
-        this.dom.video.currentTime = 0;
-        this.generateImages();
-        this.fp_ctx.fillRect(0, 0, 100 * this.dom.fp_canvas.width, 30);
-      } else if (this.dom.video.currentTime / this.dom.video.duration >= 0.99) {
-        window.clearInterval(window.frame_interval);
-        window.setTimeout(function () {
-          return _this4.generateFrame(true);
-        }, 10);
-      }
-      // draw to loading progress canvas
       this.fp_ctx.fillRect(0, 0, video.currentTime / video.duration * this.dom.fp_canvas.width, 30);
     }
 
@@ -344,7 +329,7 @@ var GifViewer = (function () {
   }, {
     key: 'generateFrames',
     value: function generateFrames() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.dom.video.loop = false;
       this.dom.video.pause();
@@ -358,11 +343,16 @@ var GifViewer = (function () {
       this.dom.canvas.style.display = 'block';
       this.dom.progress.style.width = this.dom.canvas.width + 'px';
       window.frame_interval = window.setInterval(function () {
-        return _this5.generateFrame();
+        return _this4.generateFrame();
       }, 30);
       this.dom.video.play();
       this.dom.video.onended = function () {
+        window.onblur = null;
         window.clearInterval(window.frame_interval);
+        _this4.dom.video.pause();
+        _this4.dom.video.currentTime = 0;
+        _this4.generateImages();
+        _this4.fp_ctx.fillRect(0, 0, 100 * _this4.dom.fp_canvas.width, 30);
       };
       this.dom.video.oncanplaythrough = null;
     }
@@ -371,7 +361,7 @@ var GifViewer = (function () {
   }, {
     key: 'generateImage',
     value: function generateImage() {
-      var _this6 = this;
+      var _this5 = this;
 
       var image = new Image();
       image.src = this.frames[this.frame_index];
@@ -382,7 +372,7 @@ var GifViewer = (function () {
         this.start();
       } else {
         window.setTimeout(function () {
-          return _this6.generateImage();
+          return _this5.generateImage();
         }, 1);
       }
     }
