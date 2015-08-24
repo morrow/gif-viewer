@@ -217,7 +217,7 @@ class GifViewer {
           this.pause();
         }
       }
-    }, (60 / this.playback_rate) );
+    }, (70 / this.playback_rate) );
   }
 
   // next frame
@@ -262,14 +262,13 @@ class GifViewer {
   }
 
   // get individual frame from this.dom.video
-  generateFrame (final_frame) {
-    let video = this.dom.video;
-    this.ctx.drawImage(video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
+  generateFrame () {
+    this.ctx.drawImage(this.dom.video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
+    this.fp_ctx.fillRect(0, 0, (this.dom.video.currentTime / this.dom.video.duration) * (this.dom.fp_canvas.width), 30);
     let data_url = this.dom.canvas.toDataURL('image/png');
     if(this.frames.length < 1 || this.frames.indexOf(data_url) < 0){
       this.frames.push(data_url);
     }
-    this.fp_ctx.fillRect(0, 0, (video.currentTime / video.duration) * (this.dom.fp_canvas.width), 30);
   }
 
   // generate frames from this.dom.video
@@ -277,7 +276,7 @@ class GifViewer {
     this.dom.video.loop = false;
     this.dom.video.pause();
     this.dom.video.currentTime = 0;
-    this.dom.video.playbackRate = 2;
+    this.dom.video.playbackRate = 1.5;
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
     this.dom.canvas.width = this.dom.video.videoWidth;
@@ -285,7 +284,7 @@ class GifViewer {
     this.dom.video.style.display = 'none';
     this.dom.canvas.style.display = 'block';
     this.dom.progress.style.width = `${this.dom.canvas.width}px`;
-    window.frame_interval = window.setInterval( ()=> this.generateFrame(), 30);
+    window.frame_interval = window.setInterval( ()=> this.generateFrame(), 20);
     this.dom.video.play();
     this.dom.video.onended = ()=> {
       window.onblur = null;
