@@ -217,7 +217,7 @@ class GifViewer {
           this.pause();
         }
       }
-    }, (80 / this.playback_rate) );
+    }, (1000 / this.playback_rate) / (this.frames.length / this.dom.video.duration));
   }
 
   // next frame
@@ -276,7 +276,7 @@ class GifViewer {
     this.dom.video.loop = false;
     this.dom.video.pause();
     this.dom.video.currentTime = 0;
-    this.dom.video.playbackRate = 1.5;
+    this.dom.video.playbackRate = 1;
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
     this.dom.canvas.width = this.dom.video.videoWidth;
@@ -314,6 +314,7 @@ class GifViewer {
 
   // generate images from frames
   generateImages () {
+    this.frames = this.frames.slice(1);
     this.frame_index = 0;
     this.generateImage();
     this.dom.progress.max = this.frames.length - 1;
