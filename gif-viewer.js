@@ -187,6 +187,10 @@ var GifViewer = (function () {
               return _this2.generateFrames();
             }, 100);
           } else {
+            _this2.dom.video.onloadedmetadata = function () {
+              _this2.dom.canvas.width = _this2.dom.video.videoWidth;
+              _this2.dom.canvas.height = _this2.dom.video.videoHeight;
+            };
             _this2.dom.video.oncanplaythrough = function () {
               return _this2.generateFrames();
             };
@@ -348,8 +352,8 @@ var GifViewer = (function () {
       this.dom.video.playbackRate = 2;
       this.dom.video.style.display = 'block';
       this.dom.canvas.style.display = 'none';
-      this.dom.canvas.width = this.dom.video.offsetWidth;
-      this.dom.canvas.height = this.dom.video.offsetHeight;
+      this.dom.canvas.width = this.dom.video.videoWidth;
+      this.dom.canvas.height = this.dom.video.videoHeight;
       this.dom.video.style.display = 'none';
       this.dom.canvas.style.display = 'block';
       this.dom.progress.style.width = this.dom.canvas.width + 'px';

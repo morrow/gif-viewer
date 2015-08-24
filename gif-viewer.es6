@@ -156,6 +156,10 @@ class GifViewer {
           window.setTimeout( ()=> this.generateFrames(), 100)
         }
         else {
+          this.dom.video.onloadedmetadata = () => {
+            this.dom.canvas.width = this.dom.video.videoWidth;
+            this.dom.canvas.height = this.dom.video.videoHeight;
+          };
           this.dom.video.oncanplaythrough = ()=> this.generateFrames();
           this.dom.video.src = this.video_src;
         }
@@ -288,8 +292,8 @@ class GifViewer {
     this.dom.video.playbackRate = 2;
     this.dom.video.style.display = 'block';
     this.dom.canvas.style.display = 'none';
-    this.dom.canvas.width = this.dom.video.offsetWidth;
-    this.dom.canvas.height = this.dom.video.offsetHeight;
+    this.dom.canvas.width = this.dom.video.videoWidth;
+    this.dom.canvas.height = this.dom.video.videoHeight;
     this.dom.video.style.display = 'none';
     this.dom.canvas.style.display = 'block';
     this.dom.progress.style.width = `${this.dom.canvas.width}px`;
