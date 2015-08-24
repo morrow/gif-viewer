@@ -138,6 +138,12 @@ class GifViewer {
       }
       src = `http://crossorigin.me/${src}`
     }
+    this.dom.video.onloadedmetadata = () => {
+      this.dom.video.width = this.dom.video.videoWidth;
+      this.dom.video.height = this.dom.video.videoHeight;
+      this.dom.canvas.width = this.dom.video.videoWidth;
+      this.dom.canvas.height = this.dom.video.videoHeight;
+    };
     this.video_src = src;
     // asynchronously load video (experimental feature, trying to load entire video before playing)
     this.changeStatus('loading');
@@ -156,10 +162,6 @@ class GifViewer {
           window.setTimeout( ()=> this.generateFrames(), 100)
         }
         else {
-          this.dom.video.onloadedmetadata = () => {
-            this.dom.canvas.width = this.dom.video.videoWidth;
-            this.dom.canvas.height = this.dom.video.videoHeight;
-          };
           this.dom.video.oncanplaythrough = ()=> this.generateFrames();
           this.dom.video.src = this.video_src;
         }
