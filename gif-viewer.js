@@ -175,6 +175,7 @@ var GifViewer = (function () {
         _this2.dom.video.height = _this2.dom.video.videoHeight;
         _this2.dom.canvas.width = _this2.dom.video.videoWidth;
         _this2.dom.canvas.height = _this2.dom.video.videoHeight;
+        _this2.dom.progress.style.width = _this2.dom.canvas.width + 'px';
       };
       this.video_src = src;
       // asynchronously load video (experimental feature, trying to load entire video before playing)

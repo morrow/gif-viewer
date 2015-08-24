@@ -144,6 +144,7 @@ class GifViewer {
       this.dom.video.height = this.dom.video.videoHeight;
       this.dom.canvas.width = this.dom.video.videoWidth;
       this.dom.canvas.height = this.dom.video.videoHeight;
+      this.dom.progress.style.width = `${this.dom.canvas.width}px`;
     };
     this.video_src = src;
     // asynchronously load video (experimental feature, trying to load entire video before playing)
