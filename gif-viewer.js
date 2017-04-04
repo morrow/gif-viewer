@@ -76,6 +76,7 @@ var GifViewer = (function () {
             _this.dom.draw_cursor.checked = !_this.dom.draw_cursor.checked;break;
             break;
         }
+        _this.drawFrame();
       };
       // load gif on url change
       this.dom.load_gif.onsubmit = function (e) {
@@ -280,6 +281,7 @@ var GifViewer = (function () {
       if (this.frame_index == this.frames.length) {
         this.frame_index = 0;
       }
+      this.dom.progress.value = this.frame_index;
       this.drawFrame();
     }
   }, {
@@ -290,6 +292,7 @@ var GifViewer = (function () {
       if (this.frame_index < 0) {
         this.frame_index = this.frames.length;
       }
+      this.dom.progress.value = this.frame_index;
       this.drawFrame();
     }
 
@@ -343,9 +346,7 @@ var GifViewer = (function () {
       this.ctx.drawImage(this.dom.video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
       this.fp_ctx.fillRect(0, 0, this.dom.video.currentTime / this.dom.video.duration * this.dom.fp_canvas.width, 30);
       var data_url = this.dom.canvas.toDataURL('image/png');
-      if (this.frames.length < 1 || this.frames.indexOf(data_url) < 0) {
-        this.frames.push(data_url);
-      }
+      this.frames.push(data_url);
     }
 
     // generate frames from this.dom.video
@@ -374,6 +375,9 @@ var GifViewer = (function () {
         window.clearInterval(window.frame_interval);
         _this4.dom.video.pause();
         _this4.dom.video.currentTime = 0;
+        _this4.frames.filter(function (elem, pos, arr) {
+          return arr.indexOf(elem) == pos;
+        });
         _this4.generateImages();
         _this4.fp_ctx.fillRect(0, 0, 100 * _this4.dom.fp_canvas.width, 30);
         _this4.dom.video.onended = null;

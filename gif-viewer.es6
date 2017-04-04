@@ -55,6 +55,7 @@ class GifViewer {
         case 67: this.dom.draw_cursor.checked = !this.dom.draw_cursor.checked; break;
         break;
       }
+      this.drawFrame();
     }
     // load gif on url change
     this.dom.load_gif.onsubmit = (e)=> {
@@ -233,6 +234,7 @@ class GifViewer {
     if(this.frame_index == this.frames.length){
       this.frame_index = 0;
     }
+    this.dom.progress.value = this.frame_index;
     this.drawFrame();
   }
 
@@ -242,6 +244,7 @@ class GifViewer {
     if(this.frame_index < 0){
       this.frame_index = this.frames.length;
     }
+    this.dom.progress.value = this.frame_index; 
     this.drawFrame();
   }
 
@@ -285,9 +288,7 @@ class GifViewer {
     this.ctx.drawImage(this.dom.video, 0, 0, this.dom.canvas.width, this.dom.canvas.height);
     this.fp_ctx.fillRect(0, 0, (this.dom.video.currentTime / this.dom.video.duration) * (this.dom.fp_canvas.width), 30);
     let data_url = this.dom.canvas.toDataURL('image/png');
-    if(this.frames.length < 1 || this.frames.indexOf(data_url) < 0){
-      this.frames.push(data_url);
-    }
+    this.frames.push(data_url);
   }
 
   // generate frames from this.dom.video
@@ -310,6 +311,9 @@ class GifViewer {
       window.clearInterval(window.frame_interval);
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
+      this.frames.filter(function(elem, pos, arr) {
+        return arr.indexOf(elem) == pos;
+      });
       this.generateImages();
       this.fp_ctx.fillRect(0, 0, 100 * (this.dom.fp_canvas.width), 30);
       this.dom.video.onended = null;
