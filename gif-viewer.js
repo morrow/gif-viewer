@@ -5,8 +5,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var GifViewer = (function () {
-  function GifViewer() {
+  function GifViewer(frame_generation_playback_rate) {
     _classCallCheck(this, GifViewer);
+    if(frame_generation_playback_rate == undefined){
+      var frame_generation_playback_rate = 0.75; 
+    }
 
     this.dom = {
       url: document.getElementById('url'),
@@ -23,6 +26,7 @@ var GifViewer = (function () {
       save: document.getElementById('save'),
       overlay: document.getElementById('overlay')
     };
+    this.frame_generation_playback_rate = frame_generation_playback_rate;
     this.overlay_html = this.dom.overlay.innerHTML;
     this.ctx = this.dom.canvas.getContext('2d');
     this.fp_ctx = this.dom.fp_canvas.getContext('2d');
@@ -338,7 +342,7 @@ var GifViewer = (function () {
       this.dom.video.loop = false;
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
-      this.dom.video.playbackRate = 2;
+      this.dom.video.playbackRate = this.frame_generation_playback_rate;
       this.dom.video.style.display = 'block';
       this.dom.canvas.style.display = 'none';
       this.dom.canvas.width = this.dom.video.videoWidth;
