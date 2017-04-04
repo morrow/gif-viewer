@@ -375,7 +375,7 @@ var GifViewer = (function () {
         window.clearInterval(window.frame_interval);
         _this4.dom.video.pause();
         _this4.dom.video.currentTime = 0;
-        _this4.frames.filter(function (elem, pos, arr) {
+        _this4.frames = _this4.frames.filter(function (elem, pos, arr) {
           return arr.indexOf(elem) == pos;
         });
         _this4.generateImages();

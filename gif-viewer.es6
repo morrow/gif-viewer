@@ -244,7 +244,7 @@ class GifViewer {
     if(this.frame_index < 0){
       this.frame_index = this.frames.length;
     }
-    this.dom.progress.value = this.frame_index; 
+    this.dom.progress.value = this.frame_index;
     this.drawFrame();
   }
 
@@ -311,7 +311,7 @@ class GifViewer {
       window.clearInterval(window.frame_interval);
       this.dom.video.pause();
       this.dom.video.currentTime = 0;
-      this.frames.filter(function(elem, pos, arr) {
+      this.frames = this.frames.filter(function(elem, pos, arr) {
         return arr.indexOf(elem) == pos;
       });
       this.generateImages();
