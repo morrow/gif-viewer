@@ -11,6 +11,7 @@ class GifViewer {
       video:            document.getElementById('video'),
       play_pause:       document.getElementById('play_pause'),
       draw_cursor:      document.getElementById('draw_cursor'),
+      draw_frame:       document.getElementById('draw_frame'),
       load_gif:         document.getElementById('load_gif'),
       loop:             document.getElementById('loop'),
       save:             document.getElementById('save'),
@@ -253,6 +254,18 @@ class GifViewer {
     }
   }
 
+  // draw cursor
+  drawFrameNumber () {
+    if(this.dom.draw_frame.checked){
+      this.ctx.save();
+      this.ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      this.ctx.strokeStyle = 'black';
+      this.ctx.fillText(this.frame_index, 5, 10);
+      this.ctx.stroke();
+      this.ctx.restore();
+    }
+  }
+
   // draw frame
   drawFrame (i = this.frame_index) {
     if(this.status != 'loading'){
@@ -263,6 +276,7 @@ class GifViewer {
       if(this.draw_cursor){
         this.drawCursor();
       }
+      this.drawFrameNumber();
     }
   }
 

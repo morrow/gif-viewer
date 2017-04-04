@@ -5,11 +5,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var GifViewer = (function () {
-  function GifViewer(frame_generation_playback_rate) {
+  function GifViewer() {
+    var frame_generation_playback_rate = arguments.length <= 0 || arguments[0] === undefined ? 0.75 : arguments[0];
+
     _classCallCheck(this, GifViewer);
-    if(frame_generation_playback_rate == undefined){
-      var frame_generation_playback_rate = 0.75; 
-    }
 
     this.dom = {
       url: document.getElementById('url'),
@@ -21,6 +20,7 @@ var GifViewer = (function () {
       video: document.getElementById('video'),
       play_pause: document.getElementById('play_pause'),
       draw_cursor: document.getElementById('draw_cursor'),
+      draw_frame: document.getElementById('draw_frame'),
       load_gif: document.getElementById('load_gif'),
       loop: document.getElementById('loop'),
       save: document.getElementById('save'),
@@ -304,6 +304,20 @@ var GifViewer = (function () {
       }
     }
 
+    // draw cursor
+  }, {
+    key: 'drawFrameNumber',
+    value: function drawFrameNumber() {
+      if (this.dom.draw_frame.checked) {
+        this.ctx.save();
+        this.ctx.fillStyle = 'rgba(255,255,255,0.75)';
+        this.ctx.strokeStyle = 'black';
+        this.ctx.fillText(this.frame_index, 5, 10);
+        this.ctx.stroke();
+        this.ctx.restore();
+      }
+    }
+
     // draw frame
   }, {
     key: 'drawFrame',
@@ -318,6 +332,7 @@ var GifViewer = (function () {
         if (this.draw_cursor) {
           this.drawCursor();
         }
+        this.drawFrameNumber();
       }
     }
 
@@ -409,5 +424,3 @@ var GifViewer = (function () {
 
   return GifViewer;
 })();
-
-//# sourceMappingURL=gif-viewer.js.map
